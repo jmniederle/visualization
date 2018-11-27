@@ -33,9 +33,10 @@ def aggregate(pd_df, t_min = 0, t_max = None, agg_type = "sum"):
     if t_max == None:
         t_max = max(pd_df['time'])
     
+    s_l, t_l = (max(pd_df['start']) + 1, max(pd_df['target']) + 1)
+    
     pd_df = pd_df[(pd_df['time'] >= t_min) & (pd_df['time'] <= t_max)]
     
-    s_l, t_l = (max(pd_df['start']) + 1, max(pd_df['target']) + 1)
     w_matr = np.zeros((s_l, t_l))
     
     
