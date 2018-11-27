@@ -12,8 +12,11 @@ def read_data(filename):
         start = row[1][1]
         target = row[1][2]
         weight = row[1][3]
-
-        data[time][start][target] = weight  # This will possibly be changed into np.log10(weight)
+        
+        if data[time][start][target] == 0:
+            data[time][start][target] = weight  # This will possibly be changed into np.log10(weight)
+        else:
+            data[time][start][target] += weight
 
     return (data, df)
 
