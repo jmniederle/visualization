@@ -5,7 +5,7 @@ def read_data(filename):
 
     df = pd.read_csv(filename, sep = ' ', index_col = False)
 
-    data = np.zeros((1232, 981, 983), np.float)
+    data = np.zeros((1232, 981, 983), np.int64)
 
     for row in df.iterrows():
         time = row[1][0]
