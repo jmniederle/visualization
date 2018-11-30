@@ -62,7 +62,7 @@ app.layout = html.Div([
             figure={
                 'data': [
                     {'x': [1, 2, 3], 'y': [4, 1, 2], 'type': 'bar'}
-                ],
+                ],  
                 'layout': {
                     'title': 'Dash Data Visualization',
                     'height':500
