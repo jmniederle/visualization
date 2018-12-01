@@ -87,9 +87,29 @@ class Graph:
             path.appendleft(current_vertex)
         return path
 
+# example of application
+
 graph = Graph([
     ("a", "b", 7),  ("a", "c", 9),  ("a", "f", 14), ("b", "c", 10),
     ("b", "d", 15), ("c", "d", 11), ("c", "f", 2),  ("d", "e", 6),
     ("e", "f", 9)])
 
 print(graph.dijkstra("a", "e"))
+
+# application to our data
+
+import pandas as pd
+
+final = pd.read_csv('C:/Users/20175878/Documents/GitHub/visualization/Dataset/profile_semantic_trafo_final.txt', delimiter='\s')
+
+#create a dictionary with key =  time and value = a list of (start,target,weight). Each key contains all edges for that time
+dct = {}
+for row in final.iterrows():
+    if (row[1]['time']) not in dct:
+        dct[row[1]['time']] = [(row[1]['start'], row[1]['target'], row[1]['weight'])]
+    else:
+        dct[row[1]['time']].append((row[1]['start'], row[1]['target'], row[1]['weight']))
+        
+# example: the shortest path from 515 to 843 on time 1
+test = Graph(dct[1])
+print(test.dijkstra(515, 843))
