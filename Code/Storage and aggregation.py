@@ -1,5 +1,14 @@
 import pandas as pd
 import numpy as np
+import plotly
+import plotly.plotly as py
+import plotly.graph_objs as go
+import dash
+from dash.dependencies import Input, Output
+import dash_html_components as html
+import dash_core_components as dcc
+import json
+plotly.tools.set_credentials_file(username='joshuakalisvaart', api_key='fyjdMKKX8U9wEJ5moZCq')
 
 def read_data(filename):
 
@@ -80,10 +89,13 @@ def aggregate(pd_df, t_min = 0, t_max = None, agg_type = "sum"):
 
 array, df = read_data('profile_semantic_trafo_final.txt')
 
-a = aggregate(df, t_min = 64, t_max = 65, agg_type = "min")#[76][89]   
-a.shape
-       
+a = aggregate(df, t_min = 64, t_max = 65, agg_type = "max")#[76][89]  
+plotdata = pd.DataFrame(a)
+plotdata = plotdata + 1
+plotdata = plotdata.applymap(np.log)  
+plotdata = [go.Heatmap( z=plotdata.values.tolist(), colorscale='Viridis')]
 
+py.iplot(plotdata, filename='pandas-heatmap')
 '''    
 np.sum(array[1])
 weights = np.log10(df[df["time"]==1]["weight"])
