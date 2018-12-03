@@ -10,11 +10,12 @@ import dash_core_components as dcc
 import json
 plotly.tools.set_credentials_file(username='joshuakalisvaart', api_key='fyjdMKKX8U9wEJ5moZCq')
 
+
 def read_data(filename):
 
     df = pd.read_csv(filename, sep = ' ', index_col = False)
 
-    data = np.zeros((1232, 981, 983), np.float64)
+    data = np.zeros((1232, 981, 983), np.float32)
 
     for row in df.iterrows():
         time = row[1][0]
@@ -88,14 +89,15 @@ def aggregate(pd_df, t_min = 0, t_max = None, agg_type = "sum"):
 
 
 array, df = read_data('profile_semantic_trafo_final.txt')
-
+'''
 a = aggregate(df, t_min = 64, t_max = 65, agg_type = "max")#[76][89]  
 plotdata = pd.DataFrame(a)
 plotdata = plotdata + 1
 plotdata = plotdata.applymap(np.log)  
 plotdata = [go.Heatmap( z=plotdata.values.tolist(), colorscale='Viridis')]
 
-py.iplot(plotdata, filename='pandas-heatmap')
+py.iplot(plotdata, filename='pandas-heatmap')'''
+
 '''    
 np.sum(array[1])
 weights = np.log10(df[df["time"]==1]["weight"])
