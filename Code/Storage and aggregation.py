@@ -8,6 +8,10 @@ from dash.dependencies import Input, Output
 import dash_html_components as html
 import dash_core_components as dcc
 import json
+import plotly.figure_factory as ff
+import matplotlib.pyplot as plt
+
+
 plotly.tools.set_credentials_file(username='joshuakalisvaart', api_key='fyjdMKKX8U9wEJ5moZCq')
 
 def read_data(filename):
@@ -89,10 +93,15 @@ def aggregate(pd_df, t_min = 0, t_max = None, agg_type = "sum"):
 
 array, df = read_data('profile_semantic_trafo_final.txt')
 
-a = aggregate(df, t_min = 64, t_max = 65, agg_type = "max")#[76][89]  
+a = aggregate(df, t_min = 64, t_max = 65, agg_type = "sum")#[76][89]  
+
 plotdata = pd.DataFrame(a)
+#plotdata = plotdata.replace(0,np.NaN)
 plotdata = plotdata + 1
-plotdata = plotdata.applymap(np.log)  
+plotdata = plotdata.applymap(np.log)
+#plt.contourf(plotdata, cmap='RdGy', figsize = (15,15))
+#plt.colorbar();
+
 plotdata = [go.Heatmap( z=plotdata.values.tolist(), colorscale='Viridis')]
 
 py.iplot(plotdata, filename='pandas-heatmap')
