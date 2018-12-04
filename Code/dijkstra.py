@@ -100,7 +100,7 @@ print(graph.dijkstra("a", "e"))
 
 import pandas as pd
 
-final = pd.read_csv('C:/Users/20175878/Documents/GitHub/visualization/Dataset/profile_semantic_trafo_final.txt', delimiter='\s')
+final = pd.read_csv('C:/Users/20175876/Documents/GitHub/visualization/Dataset/profile_semantic_trafo_final.txt', delimiter='\s')
 
 #create a dictionary with key =  time and value = a list of (start,target,weight). Each key contains all edges for that time
 dct = {}
@@ -109,7 +109,18 @@ for row in final.iterrows():
         dct[row[1]['time']] = [(row[1]['start'], row[1]['target'], row[1]['weight'])]
     else:
         dct[row[1]['time']].append((row[1]['start'], row[1]['target'], row[1]['weight']))
-        
+    
 # example: the shortest path from 515 to 843 on time 1
-test = Graph(dct[1])
-print(test.dijkstra(515, 843))
+outputdct = {}
+errorlist = []
+for key in dct:
+    try:
+        test = Graph(dct[key])
+        outputdct[key] = test.dijkstra(515, 843)
+    except:
+        errorlist.append(key)
+        
+outputdct #returns (key=timeslot : value=shortest path)
+errorlist #returns all timeslots with no shortest path given the input nodes 
+
+dct
