@@ -1,50 +1,71 @@
-# -*- coding: utf-8 -*-
+import base64
+import io
 
 import dash
-from dash.dependencies import Input, Output
-import dash_html_components as html
+from dash.dependencies import Input, Output, State
 import dash_core_components as dcc
+import dash_html_components as html
+import dash_table_experiments as dt
+
+import StorageAggregation as sa
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 
+app.scripts.config.serve_locally = True
+
 app.layout = html.Div([
-    html.H1(
-            children='Visualization Tool - Group 8',
-            style={
-                    'textAlign': 'center'
-                }
-            ),
-    dcc.Tabs(id="tabs-example", value='Home', children=[
-        dcc.Tab(label='Home', value='Home'),
-        dcc.Tab(label='Dynamic Graph Visualization', value='Visualization1'),
-        dcc.Tab(label='Shortest path algorithm', value='Dijkstra'),
-        dcc.Tab(label='Aggregation', value='Aggregation')
-    ]),
-    html.Div(id='tabs-content-example')
-])
+    dcc.Upload(
+        id='upload-data',
+        children=html.Div([
+            'Drag and Drop or ',
+            html.A('Select Files')
+        ]),
+        style={
+            'width': '100%',
+            'height': '60px',
+            'lineHeight': '60px',
+            'borderWidth': '1px',
+            'borderStyle': 'dashed',
+            'borderRadius': '5px',
+            'textAlign': 'center',
+            'margin': '10px'
+        },
+        # Allow multiple files to be uploaded
+        multiple=False
+    ),
+    html.Div(id='output-data-upload')])
 
 
-@app.callback(Output('tabs-content-example', 'children'),
-              [Input('tabs-example', 'value')])
-    
-def render_content(tab):
-    if tab == 'Home':
+def parse_contents(contents, filename):
+    content_type, content_string = contents.split(',')
+
+    decoded = base64.b64decode(content_string)
+    try:
+        if 'txt' in filename:
+            array, df = sa.read_data(io.StringIO(decoded.decode('utf-8')))
+    except Exception as e:
+        print(e)
         return html.Div([
-            html.H1('Insert Text')
-
+            'There was an error processing this file.'
         ])
-    elif tab == 'Visualization1':
-        return html.Div([
-            html.H1('Insert Text')
-        ])
-    elif tab == 'Dijkstra':
-        return html.Div([
-                html.H1('Insert text')])
-    elif tab == 'Aggregation':
-        return html.Div([
-                html.H1('Insert text')])
+
+    return html.Div([
+        html.H5(filename),
+        dt.DataTable(rows=df.to_dict('records')),
+    ])
+
+
+@app.callback(Output('output-data-upload', 'children'),
+              [Input('upload-data', 'contents')],
+              [State('upload-data', 'filename')])
+def update_output(contents, filename):
+    if contents is not None:
+        children = [
+            parse_contents(contents, filename)]
+        return children
+
 
 
 if __name__ == '__main__':
