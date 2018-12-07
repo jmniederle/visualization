@@ -25,7 +25,7 @@ app.layout = html.Div([
                 }
             ),
         ],
-        style={'width': '33%', 'display': 'inline-block'}
+        style={'width': '20%', 'display': 'inline-block'}
         ),
 
     html.Div([
@@ -48,12 +48,12 @@ app.layout = html.Div([
                 ],
                 'layout': {
                     'title': 'Dash Data Visualization',
-                    'height':250
+                    'height':500
                     }
                 }
             )
         ],
-        style={'width': '33%', 'display': 'inline-block'}
+        style={'width': '60%', 'display': 'inline-block'}
         ),
 
     html.Div([
@@ -70,7 +70,7 @@ app.layout = html.Div([
                 }
             )
         ],
-        style={'width': '33%', 'display': 'inline-block', 'float': 'right'},
+        style={'width': '20%', 'display': 'inline-block', 'float': 'right'},
         )
     ]
 )

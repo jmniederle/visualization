@@ -17,23 +17,11 @@ app.scripts.config.serve_locally = True
 
 markdown_text= '''
 Welcome to our Visualization tool!
-a
-
-a
-a
-a
-a
-a
-a
-
-a
-a
-a
 '''
 
 app.layout = html.Div(children=[
         html.H1(children="Visualization Group 8", style={'textAlign':'center'}),
-        dcc.Markdown(markdown_text, style={'textAlign':'center'}),
+        dcc.Markdown(markdown_text),
         html.Div([
                 
                 # Column 1
