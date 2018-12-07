@@ -28,4 +28,4 @@ G = nx.DiGraph()
 for node in dct[48]:
     G.add_edge(node[0], node[1], weight=node[2])
     
-nx.draw_networkx_edges(G, with_labels=True, node_size=100, node_color="skyblue", arrows=True, arrowsize=1, arrowstyle='->', pos=nx.spring_layout(G))
+nx.draw(G, with_labels=True, node_size=100, node_color="skyblue", pos=nx.spring_layout(G))
