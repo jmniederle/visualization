@@ -138,7 +138,7 @@ def plotTable(df):
 
 # Aggregation Visualization 
 @app.callback(
-        Output('aggr-slider-dropdown','options'),
+        Output('aggr-slider-dropdown', 'options'),
         [Input('output-data-upload', 'children')])
 def aggr_slider_1(df):
     if df is not None:
@@ -148,7 +148,7 @@ def aggr_slider_1(df):
 
 
 @app.callback(
-        Output('aggr-slider-dropdown-2','options'),
+        Output('aggr-slider-dropdown-2', 'options'),
         [Input('output-data-upload', 'children')])
 def aggr_slider_2(df):
     if df is not None:
@@ -163,7 +163,7 @@ def aggr_slider_2(df):
     Output('adj-matr', 'figure'),
     [Input('aggr-slider-dropdown', 'value'), Input('aggr-slider-dropdown-2', 'value'),
      Input('output-data-upload','children'), Input('aggr_Button', 'n_clicks')])
-def update_dy(timestamp, timestamp2, df, n_clicks):
+def update_adj(timestamp, timestamp2, df, n_clicks):
     if df is not None and n_clicks > 0:
         data = pd.read_json(df, orient='split')[['time', 'start', 'target', 'logweight']]
         aggr_arr = sa.aggregate(data, timestamp, timestamp2, "sum")
