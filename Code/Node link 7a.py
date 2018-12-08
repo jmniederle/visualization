@@ -31,6 +31,7 @@ df = df[(df.T != 0).any()]
 
 
 G = nx.generators.directed.random_k_out_graph(10, 3, 0.5)
+G
 pos = nx.layout.spring_layout(G)
 
 node_sizes = [3 + 10 * i for i in range(len(G))]
