@@ -14,51 +14,81 @@ external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 
+
 app.layout = html.Div([
             html.Div([
                 html.Div([
-                        html.Div(children = [html.H4('Starting time'),
+                        html.Div(children = [html.H5('Starting time'),
                                  dcc.Dropdown(
                                     id='dyn-dropdown',
                                     options= [{'label': i, 'value': i} for i in data['time'].unique()],
-                                    value=1)],
-                        style={'width': '30%', 'display': 'inline-block'}),
+                                    value=1)], className = 'six columns'),
                         
-                        html.Div(children = [html.H4('Ending time'),
-                                 dcc.Dropdown(
-                                    id='dyn-dropdown-2', 
-                                    options= [{'label': i, 'value': i} for i in data['time'].unique()],
-                                    value=1231)],
-                                style={'width': '30%', 'float' : 'right', 'display': 'inline-block', 'vertical-align': 'top'}),
+                         html.Div([html.H5('Ending time'),
+                             dcc.Dropdown(
+                                id='dyn-dropdown-2', 
+                                options= [{'label': i, 'value': i} for i in data['time'].unique()],
+                                value=1231)], className = 'six columns'
+                            )
+                 
                         
-                        html.Div(children= [html.H4('Select Log-weight'),
-                                  dcc.Input(id='dyn_edge', value=data['logweight'].min(), type='number')],
-                                style={'width': '30%', 'float' : 'right', 'display': 'inline-block'})
-                        
-                    ]),
-                    html.Button('Plot', id='dyn_Button', n_clicks=0),
-                    dcc.Graph(id='dyn_graph')
+                    ], className = 'row'),
+                             
+                html.Div([
                     
-                    #dcc.Slider(id='dyn_slider',
-                               #min=data['logweight'].min(),
-                               #max=data['logweight'].max(),
-                               #value= data['logweight'].min())
+                html.Div([html.H5('Select starting Log-weight'),
+                        dcc.Input(id='dyn_edge_start', value=data['logweight'].min(), type='number',
+                            #style={'width': '40%','float':'right', 'display': 'inline-block'}
+                            )
+                        ], className = 'six columns'),
+                       
+
+                    html.Div([html.H5('Select ending Log-weight'),
+                                dcc.Input(id='dyn_edge_end', value=data['logweight'].max(), type='number',
+                                    #style={'width': '40%', 'float' : 'right', 'display': 'inline-block'}
+                                    )], className = 'six columns')
+                            ], className = 'row'),
+
+                html.Div([
+
+                    html.Div([html.H5('Select start node'),
+                              dcc.Dropdown(id='dyn_start_node',
+                                           options=[{'label': i, 'value': i} for i in data['start'].sort_values().unique()],
+                                           value=data['start'].min())
+                              ], className = 'six columns'),
+                    
+                    html.Div([html.H5('Select end start node'),
+                              dcc.Dropdown(id='dyn_start_end_node',
+                                           options=[{'label': i, 'value': i} for i in data['target'].sort_values().unique()],
+                                           value=data['start'].max())
+                              ], className = 'six columns')
+                ], className= 'row'),
+
+                html.Div([
+                    html.Button('Plot', id='dyn_Button', n_clicks=0),
+                    dcc.Graph(id='dyn_graph')])
                 ])
         ])
 
 
+
 @app.callback(Output('dyn_graph', 'figure'),
               [Input('dyn_Button', 'n_clicks'), Input('dyn-dropdown', 'value'),
-               Input('dyn-dropdown-2', 'value'), Input('dyn_edge', 'value')])
-def update_dyn(n_clicks, t_min, t_max, weight):
+               Input('dyn-dropdown-2', 'value'), Input('dyn_edge_start', 'value'),
+               Input('dyn_edge_end', 'value'), Input('dyn_start_node', 'value'),
+               Input('dyn_start_end_node', 'value')])
+def update_dyn(n_clicks, t_min, t_max, weight_start, weight_end, start_node, end_node):
     if n_clicks > 0:
+        print(n_clicks)
         df = sa.read_data('profile_semantic_trafo_final.txt')
         df = df.drop_duplicates(subset=['time', 'start', 'target'])
-        df = df[(df['time'] >= t_min) & (df['time'] <= t_max) & (df['logweight'] >= weight)]
-        
+        df = df[(df['time'] >= t_min) & (df['time'] <= t_max) & (df['logweight'] >= weight_start) &
+                (df['logweight'] <= weight_end) & (df['start'] >= start_node) & (df['start'] <= end_node)]
+        df['cat_time'] = df['time'].astype('category')
+
         start = time.time()
         lst2 = []
-        for edge in range(5): # highest count of edges for time(639)
+        for edge in range(df['cat_time'].describe()['freq']):
             print(edge)
             trace_dict = {}
             x_trace = []
@@ -71,7 +101,7 @@ def update_dyn(n_clicks, t_min, t_max, weight):
                     x_trace.append(row['time'] + 0.5)
                     y_trace.append(row['start'])
                     y_trace.append(row['target'])
-                    #y_trace.append(None)
+                    y_trace.append(None)
                 except:
                     y_trace.append(None)
                     pass
@@ -86,7 +116,7 @@ def update_dyn(n_clicks, t_min, t_max, weight):
                                 y = trace['y'],
                                 connectgaps = False,
                                 opacity= 0.7,
-                                mode= 'lines',
+                                mode= 'lines'
                                 ) for trace in lst2
                         ],
                     'layout':

@@ -52,6 +52,15 @@ tab_2_layout = html.Div([
                         style={'width': '48%', 'float' : 'right', 'display': 'inline-block', 'vertical-align': 'top'}),
                         
                     ]),
+                html.Div([html.H5('Color Scale'),
+                         dcc.RadioItems(id='aggr_scale',
+                        options=[
+                            {'label': 'Jet', 'value': 'Jet'},
+                            {'label': 'Viridis', 'value': 'Viridis'},
+                            {'label': 'YlOrRd', 'value':'YlOrRd'}
+                        ],
+                        value='YlOrRd')
+                    ]),
                     html.Button('Plot', id='aggr_Button', n_clicks=0),
                     dcc.Graph(
                         id='adj-matr' 
@@ -162,15 +171,15 @@ def aggr_slider_2(df):
 @app.callback(
     Output('adj-matr', 'figure'),
     [Input('aggr-slider-dropdown', 'value'), Input('aggr-slider-dropdown-2', 'value'),
-     Input('output-data-upload','children'), Input('aggr_Button', 'n_clicks')])
-def update_adj(timestamp, timestamp2, df, n_clicks):
+     Input('output-data-upload','children'), Input('aggr_Button', 'n_clicks'),
+     Input('aggr_scale', 'value')])
+def update_adj(timestamp, timestamp2, df, n_clicks, scale):
     if df is not None and n_clicks > 0:
         data = pd.read_json(df, orient='split')[['time', 'start', 'target', 'logweight']]
         aggr_arr = sa.aggregate(data, timestamp, timestamp2, "sum")
         aggr_df = sa.array_to_df(aggr_arr)
         x_r, y_r = (aggr_df['start'].max(), aggr_df['target'].max())
-        #df = inp_df[inp_df['time']==timestamp]
-        #print(df.describe())
+
         returnval = {
                 'data':[
                     go.Scatter(
@@ -179,7 +188,8 @@ def update_adj(timestamp, timestamp2, df, n_clicks):
                         mode = 'markers',
                         marker = dict(
                                 color = aggr_df['logweight'],
-                                colorscale='Viridis',
+                                colorscale=scale,
+                                reversescale = True,
                                 showscale=True))
                     ],
                 'layout':
