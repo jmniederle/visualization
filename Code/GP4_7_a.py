@@ -22,21 +22,23 @@ for timestamp in dct:
     for tpl in dct[timestamp]:
       tpl[2] = np.log(tpl[2])
 
-
+# DRAW SIMPLE GRAPH, USE THIS ONE FOR ASSIGNMENT 4 EXERCISE 7A
 def draw_simple(timestamp):
-    G = nx.DiGraph()
+    G = nx.Graph()
     for node in dct[timestamp]:
-        G.add_edge(node[0], node[1], weight=node[2])
+        G.add_edge(node[0], node[1])
         
-    nx.draw(G, with_labels=True, node_size=100, node_color="skyblue", pos=nx.spring_layout(G, scale = 3))
-    #nx.draw(G, with_labels=True, node_size=100, node_color="skyblue", pos=nx.spring_layout(G, scale = 3), arrowstyle='fancy')
+    nx.draw(G, with_labels=True, node_size=500, node_color="skyblue", pos=nx.spring_layout(G, scale = 3))
+    
+# DRAW WEIGHTER GRAPH, USE THIS ONE FOR ASSIGNMENT 4 EXERCISE 7B
 def draw_weighted(timestamp):
     G = nx.DiGraph()
     for node in dct[timestamp]:
         G.add_edge(node[0], node[1], weight=node[2])
+        edges = G.edges()
+        weights = [G[u][v]['weight']*0.3 for u,v in edges]
         
-#    nx.draw(G, with_labels=True, node_size=100, node_color="skyblue", pos=nx.spring_layout(G, scale = 3))
-    nx.draw(G, with_labels=True, node_size=100, node_color="skyblue", pos=nx.spring_layout(G, scale = 3), arrowstyle='fancy')
+    nx.draw(G, with_labels=True, node_size=500, node_color="skyblue", pos=nx.spring_layout(G, scale = 3), arrowstyle='fancy', width=weights)
 
-draw_simple(48)
-draw_weighted(48)
+# CALL FUNCITON AND INSERT TIMESTAMP
+draw_simple(TIMESTAMP) OR draw_weighted(TIMESTAMP)
