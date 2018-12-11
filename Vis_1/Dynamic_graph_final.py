@@ -1,6 +1,6 @@
 #import pandas as pd
 import storage_aggr as sa
-
+import numpy as np
 import time
 import dash
 import dash_html_components as html
@@ -88,49 +88,49 @@ def update_dyn(n_clicks, t_min, t_max, weight_start, weight_end, start_node, end
 
         start = time.time()
         lst2 = []
-        for edge in range(df['cat_time'].describe()['freq']):
-            print(edge)
+        weightlst = []
+        for timestamp in df['time'].unique():
+            print(timestamp)
+            df1 = df[df['time'] == timestamp]
             trace_dict = {}
             x_trace = []
             y_trace = []
-            for timestamp in df['time'].unique():
-                df1 = df[df['time'] == timestamp]
-                try:
-                    row = df1.iloc[edge]
-                    x_trace.append(row['time'])
-                    x_trace.append(row['time'] + 0.5)
-                    y_trace.append(row['start'])
-                    y_trace.append(row['target'])
-                    y_trace.append(None)
-                except:
-                    y_trace.append(None)
-                    pass
+            for edge in range(len(df1)):              
+                row = df1.iloc[edge]
+                x_trace.append(row['time'])
+                x_trace.append(row['time'] + 5)
+                y_trace.append(row['start'])
+                y_trace.append(row['target'])
+                y_trace.append(None)
+
             trace_dict['x'] = x_trace
             trace_dict['y'] = y_trace
             lst2.append(trace_dict)
+            weightlst.append(np.mean(df1['logweight']))
         print(start - time.time())
+        weights = np.array(weightlst)
+        weights = list((weights/(weights.max()))*5)
+        lst2 = zip(lst2, weights)
+        
         returnval = {
                     'data': [
                             go.Scatter(
                                 x = trace['x'],
                                 y = trace['y'],
                                 connectgaps = False,
-                                opacity= 0.7,
-                                mode= 'lines'
-                                ) for trace in lst2
+                                opacity= 0.5,
+                                mode= 'lines',
+                                line = {'width': weight}
+                                ) for trace, weight in lst2
                         ],
                     'layout':
                          go.Layout(
                                  title='Dynamic Graph Visualisation',
-                                 showlegend = False)                                           
+                                 showlegend = False,
+                                 xaxis = {'type': 'category', 'tickangle': 45})                                           
                     }
         return returnval
 
 
 if __name__ == '__main__':
     app.run_server(debug=True)
-
-
-
-#df['time'] = df['time'].astype('category')
-#df['time'].describe()
