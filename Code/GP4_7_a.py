@@ -7,6 +7,7 @@ Created on Fri Dec  7 11:12:25 2018
 import pandas as pd
 import networkx as nx
 import numpy as np
+import matplotlib.pyplot as plt
 
 final = pd.read_csv('profile_semantic_trafo_final.txt', delimiter='\s')
 
@@ -29,6 +30,7 @@ def draw_simple(timestamp):
         G.add_edge(node[0], node[1])
         
     nx.draw(G, with_labels=True, node_size=500, node_color="skyblue", pos=nx.spring_layout(G, scale = 3))
+    plt.savefig("Simple.png", format="PNG")
     
 # DRAW WEIGHTER GRAPH, USE THIS ONE FOR ASSIGNMENT 4 EXERCISE 7B
 def draw_weighted(timestamp):
@@ -38,7 +40,8 @@ def draw_weighted(timestamp):
         edges = G.edges()
         weights = [G[u][v]['weight']*0.3 for u,v in edges]
         
-    nx.draw(G, with_labels=True, node_size=500, node_color="skyblue", pos=nx.spring_layout(G, scale = 3), arrowstyle='fancy', width=weights)
+    nx.draw(G, with_labels=True, node_size=500, node_color="skyblue", pos=nx.spring_layout(G, scale = 10), arrowstyle='fancy', width=weights)
+    plt.savefig("Weighted.png", format="PNG")
 
 # CALL FUNCITON AND INSERT TIMESTAMP
-draw_simple(TIMESTAMP) OR draw_weighted(TIMESTAMP)
+draw_weighted(48)
