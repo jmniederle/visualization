@@ -50,31 +50,39 @@ draw_weighted(48)
 def get_nodes_edges_weights(timestamp):
     from_list = []
     for i in dct[timestamp]:
-        from_list.append([i[0],i[1], i[2]])
+        from_list.append((i[0],i[1]))
     return(from_list)
 A = get_nodes_edges_weights(48)
-A
+
 def make_G(timestamp):
     G = nx.Graph()
     edges = get_nodes_edges_weights(timestamp)
-    for i in edges:
-        G.add_edge(i[0], i[1], weight = i[2])
-    pos = nx.layout.spring_layout(G)
-    return(G, pos)
+    G.add_edges_from(edges)
     
+    return(G)
+
+G = make_G(48)
+pos=nx.get_node_attributes(G,'pos')
+
+dmin=1
+ncenter=0
+for n in pos:
+    x,y=pos[n]
+    d=(x-0.5)**2+(y-0.5)**2
+    if d<dmin:
+        ncenter=n
+        dmin=d
+       
 edge_trace = go.Scatter(
     x=[],
     y=[],
     line=dict(width=0.5,color='#888'),
     hoverinfo='none',
     mode='lines')
-
-G, pos = make_G(48)
-pos
-G.node[edge[0]][pos[0]]
+    
 for edge in G.edges():
-    x0, y0 = G.node[edge[0]][pos[G.node]]
-    x1, y1 = G.node[edge[1]][pos[G.node]]
+    x0, y0 = G.node[edge[0]]['pos']
+    x1, y1 = G.node[edge[1]]['pos']
     edge_trace['x'] += tuple([x0, x1, None])
     edge_trace['y'] += tuple([y0, y1, None])
 #from storage_aggr import read_data
