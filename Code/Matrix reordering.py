@@ -45,7 +45,7 @@ def PCA_sort(filename):
     data = aggregate(df, t_min = 64, t_max = 65, agg_type = "max")
     data = sorted(data, key=lambda x: x[df_components.max().idxmax()])
     return(data)
-PCA_sort('profile_semantic_trafo_final.txt')
+print(PCA_sort('profile_semantic_trafo_final.txt'))
     
     
 ###############################################################################
