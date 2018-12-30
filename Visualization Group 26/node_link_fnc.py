@@ -3,7 +3,7 @@ import plotly.graph_objs as go
 import networkx as nx
 
 
-def nodelink(timepoint, df):
+def nodelink(timepoint, df, click_text=None):
     dct = {}
     
     for row in df.iterrows():
@@ -57,7 +57,17 @@ def nodelink(timepoint, df):
         node_trace['y'] += tuple([y])
         node_trace['text'] += tuple([int(node)])
     
-    fig = go.Figure(data=[edge_trace, node_trace],
+    if click_text in node_trace['text']:
+        idx = node_trace['text'].index(click_text)
+        marked_trace = go.Scatter(x=[node_trace['x'][idx]], y=[node_trace['y'][idx]], text=[click_text],
+                                    mode='markers',
+                                    hoverinfo='text',
+                                    marker=dict(
+                                        color='RGB(255,40,0)',
+                                        size=20))
+    else:
+        marked_trace = go.Scatter()
+    fig = go.Figure(data=[edge_trace, node_trace, marked_trace],
                  layout=go.Layout(
                     title='Node link diagram for time {}'.format(timepoint),
                     showlegend=False,

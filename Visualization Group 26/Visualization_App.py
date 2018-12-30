@@ -516,10 +516,13 @@ def nl_dd_time(df):
 @app.callback(
         Output('nl_diagram', 'figure'),
         [Input('output-data-upload', 'children'), Input('dropdown-time_nl', 'value'),
-         Input('nl_Button', 'n_clicks')])
-def update_nl_diagram(df, time, n_clicks):
+         Input('nl_Button', 'n_clicks'), Input('nl_diagram', 'clickData')])
+def update_nl_diagram(df, time, n_clicks, clickdata):
     if (n_clicks >0) and (df is not None):
         df = pd.read_json(df, orient='split')
+        if clickdata is not None:
+            textval = str(clickdata['points'][0]['text'])
+            return nl.nodelink(time, df, textval)
         return nl.nodelink(time, df)
 
 
