@@ -36,7 +36,7 @@ for i in array2:
 # Hier moet dus op gesort worden
     
 data = Counter(component_list)
-data.most_common(1)
+print(data.most_common(1))
 
 
 
