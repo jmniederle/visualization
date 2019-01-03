@@ -74,9 +74,16 @@ print(PCA_sort('profile_semantic_trafo_final.txt'))
 
 # Kijkt welke attribute het vaakst de hoogste CPA score heeft
 # Hier moet dus op gesort worden
+<<<<<<< HEAD
+    
+data = Counter(component_list)
+print(data.most_common(1))
+
+=======
 #    
 #data = Counter(component_list)
 #data.most_common(1)
+>>>>>>> aff0c43078e8f665b351f37a70902aa72e510df6
 
 
 #for i in pca.components_:
