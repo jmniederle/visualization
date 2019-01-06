@@ -12,7 +12,7 @@ def read_data(filename):
 
 def create_array(df):
     data = np.zeros((1232, 981, 983), np.float32)
-    
+    #981, 983
     for row in df.iterrows():
         time = row[1][0]
         start = row[1][1]
