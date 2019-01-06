@@ -58,9 +58,14 @@ tab_2_layout = html.Div([
                 html.Div([html.H5('Color Scale'),
                          dcc.RadioItems(id='aggr_scale',
                         options=[
-                            {'label': 'Jet', 'value': 'Jet'},
                             {'label': 'Viridis', 'value': 'Viridis'},
-                            {'label': 'YlOrRd', 'value':'YlOrRd'}
+                            {'label': 'YlOrRd', 'value':'YlOrRd'},
+                            {'label': 'Blues', 'value':'Blues'},
+                            {'label': 'Electric', 'value':'Electric'},
+                            {'label': 'Greens', 'value':'Greens'},
+                            {'label': 'Greys', 'value':'Greys'},
+                            {'label': 'Hot', 'value':'Hot'},
+                            {'label': 'YlGnBu', 'value':'YlGnBu'},
                         ],
                         value='YlOrRd')
                     ]),
